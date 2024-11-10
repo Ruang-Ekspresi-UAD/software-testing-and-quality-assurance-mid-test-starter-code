@@ -1,0 +1,88 @@
+name: Autograding Tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  autograding:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      # Run Mocha unit tests and save results
+      - name: Run Mocha unit tests
+        id: run-mocha-tests
+        run: |
+          mocha './test/**/*.unit.test.js' --reporter mocha-junit-reporter --reporter-options mochaFile=mocha-test-results.xml
+          echo "Mocha test results saved to mocha-test-results.xml."
+
+      # Run Jest integration tests and save results
+      - name: Run Jest integration tests
+        id: run-jest-tests
+        run: |
+          jest --ci --reporters=default --reporters=jest-junit
+          echo "Jest test results saved to jest-junit.xml."
+
+      - name: Install xmlstarlet
+        run: sudo apt-get install -y xmlstarlet
+
+      # Parse and score Mocha test results
+      - name: Parse Mocha test results
+        id: parse-mocha-results
+        run: |
+          mocha_total_tests=$(xmlstarlet sel -t -v 'count(//testcase)' mocha-test-results.xml)
+          mocha_passed_tests=$(xmlstarlet sel -t -v 'count(//testcase[not(failure)])' mocha-test-results.xml)
+
+      # Parse and score Jest test results
+      - name: Parse Jest test results
+        id: parse-jest-results
+        run: |
+          jest_total_tests=$(xmlstarlet sel -t -v 'count(//testcase)' jest-junit.xml)
+          jest_passed_tests=$(xmlstarlet sel -t -v 'count(//testcase[not(failure)])' jest-junit.xml)
+
+      # Calculate overall score
+      - name: Calculate Score
+        id: calculate-score
+        run: |
+          total_tests=$((mocha_total_tests + jest_total_tests))
+          passed_tests=$((mocha_passed_tests + jest_passed_tests))
+          max_score=100
+
+          # Calculate score based on the number of passed tests
+          if [[ "$total_tests" -gt 0 ]]; then
+            score=$((passed_tests * max_score / total_tests))
+          else
+            score=0
+          fi
+
+          result_summary="Total tests: $total_tests\nPassed tests: $passed_tests\nScore: $score/$max_score\n"
+
+          # Output results for GitHub Actions logging
+          echo -e "$result_summary"
+
+          # Final summary output
+          if [[ $total_tests -gt 0 ]]; then
+            echo "🏆 Grand total tests passed: $passed_tests/$total_tests tests"
+          else
+            echo "🏆 No tests were run."
+          fi
+
+      - name: Display test summary
+        run: echo "$result_summary"
