@@ -4,27 +4,20 @@ const articlesFilePath = path.join(__dirname, '../data/articles.json');
 
 class ArticleRepository {
     getAllArticles() {
-        const data = fs.readFileSync(articlesFilePath);
-        return JSON.parse(data);
+        // TODO: Read articles from the JSON file and return as a parsed object
+        throw new Error("getAllArticles method not implemented");
     }
 
     getArticleById(id) {
-        const articles = this.getAllArticles();
-        const article = articles.find(article => article.id === id);
-        return article || null;
+        // TODO: Retrieve all articles and find the article with the matching ID
+        throw new Error("getArticleById method not implemented");
     }
 
     createArticle(article) {
-        // Ensure the article has an ID before adding it to the list
-        if (!article.id) {
-            article.id = Date.now().toString(); // Assign a unique ID if not already set
-        }
-        const articles = this.getAllArticles();
-        articles.push(article);
-        fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
-        return article;
+        // TODO: Generate a unique ID if not provided
+        // TODO: Retrieve all articles, add the new article, and save the updated list back to the JSON file
+        throw new Error("createArticle method not implemented");
     }
-
 
     updateArticle(id, updatedArticle) {
         let articles = this.getAllArticles();
@@ -38,14 +31,9 @@ class ArticleRepository {
     }
 
     deleteArticle(id) {
-        let articles = this.getAllArticles();
-        const index = articles.findIndex(article => article.id === id);
-        if (index !== -1) {
-            const deletedArticle = articles.splice(index, 1);
-            fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2));
-            return deletedArticle[0];
-        }
-        return null;
+        // TODO: Retrieve all articles, find the article by ID, and remove it from the list
+        // TODO: Save the updated list back to the JSON file if the article is found
+        throw new Error("deleteArticle method not implemented");
     }
 }
 

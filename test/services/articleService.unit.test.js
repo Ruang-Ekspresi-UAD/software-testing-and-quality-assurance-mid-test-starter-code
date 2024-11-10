@@ -14,20 +14,21 @@ describe('ArticleService', () => {
 
     describe('getAllArticles', () => {
         it('should return all articles', () => {
-            const mockArticles = [{ id: '1', title: 'Article 1' }];
+            // TODO: Initialize the articlesFilePath with mock data: 
+
             // TODO: Stub articleRepositoryMock.getAllArticles to return mockArticles
 
             // TODO: Make a GET request to /api/articles and store the response
 
             // TODO: Add assertion to verify the result and check if the method was called
-            expect(articles).to.deep.equal(mockArticles);
-            sinon.assert.calledOnce(articleRepositoryMock.getAllArticles);
+
         });
     });
 
     describe('getArticleById', () => {
         it('should return the article with the given id', () => {
-            const mockArticle = { id: '1', title: 'Article 1' };
+            // TODO: Initialize the articlesFilePath with mock data: 
+
             // TODO: Stub articleRepositoryMock.getArticleById for id '1' to return mockArticle
 
             // TODO: Call articleService.getArticleById with id '1' and assert the result

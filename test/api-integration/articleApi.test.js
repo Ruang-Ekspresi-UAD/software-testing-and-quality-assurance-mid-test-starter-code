@@ -6,7 +6,6 @@ const path = require('path');
 const articlesFilePath = path.join(__dirname, '../../data/articles.json');
 
 describe('TODO: Article API Integration Tests', () => {
-  // Before each test, ensure the file is clean and contains an initial state
   beforeEach(() => {
     const initialData = [{ id: '1', title: 'Test Article 1' }];
     fs.writeFileSync(articlesFilePath, JSON.stringify(initialData, null, 2));
