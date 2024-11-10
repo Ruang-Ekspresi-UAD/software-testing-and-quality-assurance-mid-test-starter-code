@@ -62,11 +62,10 @@ jobs:
           total_mocha_tests=$(xmlstarlet sel -t -v 'count(//testcase)' mocha-test-results.xml)
           passed_mocha_tests=$(xmlstarlet sel -t -v 'count(//testcase[not(failure)])' mocha-test-results.xml)
           max_score=50
-
           mocha_score=$((passed_mocha_tests * max_score / total_mocha_tests))
-
-          mocha_summary="Mocha - Total tests: $total_mocha_tests\nPassed tests: $passed_mocha_tests\nScore: $mocha_score/$max_score\n"
-          echo -e "$mocha_summary"
+          
+          echo "mocha_score=$mocha_score" >> $GITHUB_ENV
+          echo "mocha_summary=Mocha - Total tests: $total_mocha_tests\nPassed tests: $passed_mocha_tests\nScore: $mocha_score/$max_score" >> $GITHUB_ENV
 
       - name: Parse Jest Test Results
         id: parse-jest-results
@@ -74,14 +73,14 @@ jobs:
           total_jest_tests=$(jq '.numTotalTests' jest-test-results.json)
           passed_jest_tests=$(jq '.numPassedTests' jest-test-results.json)
           max_score=50
-
           jest_score=$((passed_jest_tests * max_score / total_jest_tests))
 
-          jest_summary="Jest - Total tests: $total_jest_tests\nPassed tests: $passed_jest_tests\nScore: $jest_score/$max_score\n"
-          echo -e "$jest_summary"
+          echo "jest_score=$jest_score" >> $GITHUB_ENV
+          echo "jest_summary=Jest - Total tests: $total_jest_tests\nPassed tests: $passed_jest_tests\nScore: $jest_score/$max_score" >> $GITHUB_ENV
 
       - name: Calculate Total Score and Summary
         run: |
+          # Retrieve scores from environment variables
           total_score=$((mocha_score + jest_score))
           echo -e "🏆 Grand total score: $total_score/100\n"
           echo -e "$mocha_summary\n$jest_summary\n🏆 Grand total score: $total_score/100\n"
