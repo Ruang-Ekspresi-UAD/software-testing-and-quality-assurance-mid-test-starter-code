@@ -4,8 +4,7 @@ const articlesFilePath = path.join(__dirname, '../data/articles.json');
 
 class ArticleRepository {
     getAllArticles() {
-        // TODO: Read articles from the JSON file and return as a parsed object
-        throw new Error("getAllArticles method not implemented");
+        return this.articleRepository.getAllArticles();
     }
 
     getArticleById(id) {
@@ -31,9 +30,7 @@ class ArticleRepository {
     }
 
     deleteArticle(id) {
-        // TODO: Retrieve all articles, find the article by ID, and remove it from the list
-        // TODO: Save the updated list back to the JSON file if the article is found
-        throw new Error("deleteArticle method not implemented");
+        return this.articleRepository.deleteArticle(id);
     }
 }
 
