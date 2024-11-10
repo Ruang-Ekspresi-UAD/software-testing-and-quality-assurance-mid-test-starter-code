@@ -20,15 +20,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' 
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
 
+      - name: Install Mocha JUnit Reporter
+        run: npm install mocha-junit-reporter --save-dev
+
       - name: Run Mocha Tests
         id: run-mocha-tests
         run: |
-          npm test --reporter mocha-junit-reporter > mocha-test-results.xml
+          npm test -- --reporter mocha-junit-reporter > mocha-test-results.xml
           echo "Mocha test results saved to mocha-test-results.xml."
 
       - name: Run Jest Tests
